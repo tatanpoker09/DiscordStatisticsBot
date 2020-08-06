@@ -30,16 +30,6 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void saveMessage(String messageId, String userId, Timestamp date, String message, String channelId) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO messages(message_id, user_id, date, message, channel_id) VALUES(?,?,?,?,?)");
-            preparedStatement.setString(1, messageId);
-            preparedStatement.setString(2, userId);
-            preparedStatement.setTimestamp(3, date);
-            preparedStatement.setString(4, message);
-            preparedStatement.setString(5, channelId);
-            preparedStatement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        BotStatusListener.saveMessageToDatabase(messageId, userId, date, message, channelId, connection);
     }
 }

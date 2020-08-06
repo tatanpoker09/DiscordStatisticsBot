@@ -1,9 +1,6 @@
 package com.eilers.tatanpoker09.events.discord;
 
-import com.eilers.tatanpoker09.BotStatus;
-import com.eilers.tatanpoker09.DiscordBot;
-import com.eilers.tatanpoker09.DiscordChannel;
-import com.eilers.tatanpoker09.DiscordUser;
+import com.eilers.tatanpoker09.*;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -21,8 +18,9 @@ public class BotStatusListener extends ListenerAdapter {
     private static final int MAX_RETRIEVE_SIZE = 1000;
     private Connection connection;
     private DiscordBot discordBot;
-    private int duplicateKeyCount;
+    private static int duplicateKeyCount;
     private int messageCount;
+    private static WebSocket webSocket;
 
     public BotStatusListener(Connection connection, DiscordBot discordBot) {
         this.connection = connection;
@@ -31,7 +29,15 @@ public class BotStatusListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
+        connectWebSocket();
         saveMessagesToDatabase(event);
+    }
+
+    private void connectWebSocket() {
+        WebSocket webSocket = new WebSocket();
+        Thread thread = new Thread(webSocket);
+        thread.start();
+        BotStatusListener.webSocket = webSocket;
     }
 
     private void saveMessagesToDatabase(ReadyEvent event) {
@@ -116,6 +122,10 @@ public class BotStatusListener extends ListenerAdapter {
     }
 
     private void saveMessage(String messageId, String userId, Timestamp date, String message, String channelId) {
+       saveMessageToDatabase(messageId, userId, date, message, channelId, connection);
+    }
+
+    static void saveMessageToDatabase(String messageId, String userId, Timestamp date, String message, String channelId, Connection connection) {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO messages(message_id, user_id, date, message, channel_id) VALUES(?,?,?,?,?)");
             preparedStatement.setString(1, messageId);
@@ -124,13 +134,18 @@ public class BotStatusListener extends ListenerAdapter {
             preparedStatement.setString(4, message);
             preparedStatement.setString(5, channelId);
             preparedStatement.execute();
-        } catch (SQLException e) {
+            sendMessageSavedBroadcast();
+        } catch(SQLException e){
             if(e instanceof SQLIntegrityConstraintViolationException){
                 duplicateKeyCount++;
             } else {
                 e.printStackTrace();
             }
         }
+    }
+
+    static void sendMessageSavedBroadcast(){
+        BotStatusListener.webSocket.sendMessageAddedBroadcast();
     }
 
     private List<Message> getMessages(TextChannel channel){
