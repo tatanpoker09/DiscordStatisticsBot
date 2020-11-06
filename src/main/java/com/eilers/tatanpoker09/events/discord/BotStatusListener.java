@@ -205,6 +205,4 @@ public class BotStatusListener extends ListenerAdapter {
             discordUser.saveToDatabase(this.connection);
         }
     }
-
-
 }
