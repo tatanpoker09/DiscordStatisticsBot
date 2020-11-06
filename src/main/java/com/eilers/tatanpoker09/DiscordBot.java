@@ -5,9 +5,9 @@ import com.eilers.tatanpoker09.database.MySQLDatabase;
 import com.eilers.tatanpoker09.events.discord.BotStatusListener;
 import com.eilers.tatanpoker09.events.discord.MessageListener;
 import io.github.cdimascio.dotenv.Dotenv;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 
 import javax.security.auth.login.LoginException;
 import java.sql.Connection;
@@ -30,11 +30,10 @@ public class DiscordBot {
     }
 
     private void initializeDiscordBot(String token) throws LoginException {
-        JDABuilder builder = new JDABuilder(AccountType.BOT);
+        JDABuilder builder = JDABuilder.createDefault(token);
         builder.setToken(token);
-        builder.addEventListener(new MessageListener(connection));
-        builder.addEventListener(new BotStatusListener(connection, this));
-        JDA bot = builder.buildAsync();
+        builder.addEventListeners(new MessageListener(connection), new BotStatusListener(connection, this));
+        JDA bot = builder.build();
 
     }
 
@@ -50,7 +49,7 @@ public class DiscordBot {
             case MYSQL:
                 this.database = new MySQLDatabase(ip, database, username, password, port);
                 connection = this.database.connect();
-
+                System.out.println("Connected to database succesfully");
                 break;
             case POSTGRES:
             case SQLITE:

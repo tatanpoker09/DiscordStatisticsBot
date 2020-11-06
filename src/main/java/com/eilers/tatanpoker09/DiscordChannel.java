@@ -1,12 +1,11 @@
 package com.eilers.tatanpoker09;
 
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.time.OffsetDateTime;
 
 public class DiscordChannel {
     private long channel_id;
@@ -20,7 +19,7 @@ public class DiscordChannel {
         this.name = textChannel.getName();
         this.topic = textChannel.getTopic();
         this.category = textChannel.getParent().getName();
-        long millis = textChannel.getCreationTime().toInstant().toEpochMilli();
+        long millis = textChannel.getTimeCreated().toInstant().toEpochMilli();
         this.date = new Date(millis);
     }
 

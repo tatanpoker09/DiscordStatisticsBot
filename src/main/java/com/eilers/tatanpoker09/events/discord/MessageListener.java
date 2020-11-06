@@ -1,8 +1,8 @@
 package com.eilers.tatanpoker09.events.discord;
 
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +24,7 @@ public class MessageListener extends ListenerAdapter {
             if (contentRaw.equals("")) {
                 contentRaw = "$PHOTO_CONTENT$";
             }
-            OffsetDateTime creationTime = message.getCreationTime();
+            OffsetDateTime creationTime = message.getTimeCreated();
             Timestamp date = new Timestamp(creationTime.toInstant().toEpochMilli());
             saveMessage(message.getId(), message.getAuthor().getId(), date, contentRaw, event.getChannel().getId());
     }

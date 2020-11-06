@@ -4,13 +4,13 @@ import com.eilers.tatanpoker09.BotStatus;
 import com.eilers.tatanpoker09.DiscordBot;
 import com.eilers.tatanpoker09.DiscordChannel;
 import com.eilers.tatanpoker09.DiscordUser;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageHistory;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.events.ReadyEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.sql.*;
 import java.time.OffsetDateTime;
@@ -36,6 +36,7 @@ public class BotStatusListener extends ListenerAdapter {
 
     private void saveMessagesToDatabase(ReadyEvent event) {
         discordBot.BOT_STATUS = BotStatus.SAVING_MESSAGES;
+        System.out.println("Saving messages");
         duplicateKeyCount = 0;
         messageCount = 0;
         JDA bot = event.getJDA();
@@ -66,7 +67,7 @@ public class BotStatusListener extends ListenerAdapter {
         for (Message message : messages) {
             String messageId = message.getId();
             String userId = message.getAuthor().getId();
-            OffsetDateTime creationTime = message.getCreationTime();
+            OffsetDateTime creationTime = message.getTimeCreated();
             Timestamp date = new Timestamp(creationTime.toInstant().toEpochMilli());
             String contentRaw = message.getContentRaw();
             if (contentRaw.equals("")) {
@@ -102,7 +103,7 @@ public class BotStatusListener extends ListenerAdapter {
         for (Message message : messages) {
             String messageId = message.getId();
             String userId = message.getAuthor().getId();
-            OffsetDateTime creationTime = message.getCreationTime();
+            OffsetDateTime creationTime = message.getTimeCreated();
             Timestamp date = new Timestamp(creationTime.toInstant().toEpochMilli());
             String contentRaw = message.getContentRaw();
             if (contentRaw.equals("")) {
@@ -194,7 +195,7 @@ public class BotStatusListener extends ListenerAdapter {
     public void saveUsers(TextChannel general) {
         List<Member> members = general.getMembers();
         for (Member member : members) {
-            OffsetDateTime joinDate = member.getJoinDate();
+            OffsetDateTime joinDate = member.getTimeJoined();
             long millis = joinDate.toInstant().toEpochMilli();
 
             Date date = new Date(millis);

@@ -33,7 +33,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>3.5.0_329</version>
+            <version>4.2.0_214</version>
         </dependency>
         <dependency>
             <groupId>io.github.cdimascio</groupId>
