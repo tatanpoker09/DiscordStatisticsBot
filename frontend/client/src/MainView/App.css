@@ -1,0 +1,64 @@
+
+
+.left{
+    width: 20%;
+    left: 0;
+    background-color: #00B7FF;
+}
+
+.small{
+}
+
+.margin-top{
+    margin-top: 1%;
+}
+
+.list-group{
+    max-height: 300px;
+    margin-bottom: 10px;
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+path.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+
+.bar rect {
+    fill: steelblue;
+}
+
+.bar text {
+    fill: #fff;
+    font: 10px sans-serif;
+}
+line.goal {
+    stroke:green;
+    stroke-width:1px;
+}
+line {
+    stroke-width:1px;
+}
+
+.center{
+    margin: 0 auto;
+}
+
+.container{
+    margin: 0 0;
+
+}
+
+.border{
+    border-style: solid;
+    border-color: coral;
+}
+
+.round-container{
+
+}
